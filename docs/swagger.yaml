@@ -1,0 +1,866 @@
+basePath: /
+definitions:
+  controllers.CustomClaims:
+    properties:
+      role:
+        type: string
+      uid:
+        type: integer
+    type: object
+  controllers.SignUpRequest:
+    properties:
+      email:
+        type: string
+      fullname:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+    type: object
+  models.Admin:
+    properties:
+      email:
+        type: string
+      fullname:
+        type: string
+      id:
+        type: integer
+      phone:
+        type: string
+    type: object
+  models.AdminRequest:
+    properties:
+      email:
+        type: string
+      fullname:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+      role:
+        type: string
+    type: object
+  models.AuthRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  models.Booking:
+    properties:
+      booking_date:
+        type: string
+      customer_name:
+        type: string
+      destination_name:
+        type: string
+      id:
+        type: integer
+      price:
+        type: integer
+      qty:
+        type: integer
+    type: object
+  models.BookingRequest:
+    properties:
+      booking_date:
+        type: string
+      customer_id:
+        type: integer
+      destination_id:
+        type: integer
+      qty:
+        type: integer
+    type: object
+  models.City:
+    properties:
+      city:
+        type: string
+      id:
+        type: integer
+    type: object
+  models.CityRequest:
+    properties:
+      city:
+        type: string
+    type: object
+  models.Customer:
+    properties:
+      email:
+        type: string
+      fullname:
+        type: string
+      id:
+        type: integer
+      phone:
+        type: string
+    type: object
+  models.CustomerRequest:
+    properties:
+      email:
+        type: string
+      fullname:
+        type: string
+      phone:
+        type: string
+    type: object
+  models.Destination:
+    properties:
+      city_id:
+        type: string
+      city_name:
+        type: integer
+      description:
+        type: string
+      destination_name:
+        type: string
+      id:
+        type: integer
+      image:
+        type: string
+      price:
+        type: integer
+    type: object
+  models.HTTPError:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  models.Response:
+    properties:
+      data: {}
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+host: localhost:3000
+info:
+  contact:
+    name: Bryan Samperura
+    url: https://www.linkedin.com/in/bryansamperura/
+  description: This is the documentation for the ticket booking API. It provides information
+    about endpoints and their functionality.
+  license:
+    name: MIT License
+    url: http://opensource.org/licenses/MIT
+  title: API Documentation - Ticket Wisata Booking API
+  version: "1.0"
+paths:
+  /account-info:
+    get:
+      consumes:
+      - application/json
+      description: Show account info
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.CustomClaims'
+      security:
+      - Bearer: []
+      summary: Show account info
+      tags:
+      - Auth
+  /admin:
+    get:
+      description: Retrieve a list of all admin
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Admin'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      summary: Get a list of all admin
+      tags:
+      - Admin
+    post:
+      consumes:
+      - application/json
+      description: Save a new admin to the database
+      parameters:
+      - description: Admin Name
+        in: body
+        name: admin
+        required: true
+        schema:
+          $ref: '#/definitions/models.AdminRequest'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Admin'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      summary: Create a new admin
+      tags:
+      - Admin
+  /admin/{id}:
+    delete:
+      description: Deletes an existing admin from the database
+      parameters:
+      - description: Admin ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      summary: Delete admin
+      tags:
+      - Admin
+    get:
+      consumes:
+      - application/json
+      description: Returns the admin with the given id
+      parameters:
+      - description: Admin ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Admin'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      summary: Get admin by id
+      tags:
+      - Admin
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing admin in the database
+      parameters:
+      - description: Admin ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Admin Name
+        in: body
+        name: admin
+        required: true
+        schema:
+          $ref: '#/definitions/models.AdminRequest'
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      summary: Update admin
+      tags:
+      - Admin
+  /booking:
+    get:
+      description: Retrieve a list of all booking
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Booking'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      security:
+      - Bearer: []
+      summary: Get a list of all booking
+      tags:
+      - Booking
+    post:
+      consumes:
+      - application/json
+      description: Save a new booking to the database
+      parameters:
+      - description: Booking Name
+        in: body
+        name: booking
+        required: true
+        schema:
+          $ref: '#/definitions/models.BookingRequest'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Booking'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      security:
+      - Bearer: []
+      summary: Create a new booking
+      tags:
+      - Booking
+  /booking/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Returns the booking with the given id
+      parameters:
+      - description: Customer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Booking'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      security:
+      - Bearer: []
+      summary: Get booking by id
+      tags:
+      - Vooking
+  /cities:
+    get:
+      description: Retrieve a list of all cities
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.City'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      security:
+      - Bearer: []
+      summary: Get a list of all cities
+      tags:
+      - City
+  /city:
+    post:
+      consumes:
+      - application/json
+      description: Save a new city to the database
+      parameters:
+      - description: City Name
+        in: body
+        name: city
+        required: true
+        schema:
+          $ref: '#/definitions/models.CityRequest'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.City'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      security:
+      - Bearer: []
+      summary: Create a new city
+      tags:
+      - City
+  /city/{id}:
+    delete:
+      description: Deletes an existing city from the database
+      parameters:
+      - description: City ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      security:
+      - Bearer: []
+      summary: Delete City
+      tags:
+      - City
+    get:
+      consumes:
+      - application/json
+      description: Returns the city with the given id
+      parameters:
+      - description: City ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.City'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      security:
+      - Bearer: []
+      summary: Get city by id
+      tags:
+      - City
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing city in the database
+      parameters:
+      - description: City ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: City Name
+        in: body
+        name: city
+        required: true
+        schema:
+          $ref: '#/definitions/models.CityRequest'
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      security:
+      - Bearer: []
+      summary: Update City
+      tags:
+      - City
+  /customer:
+    post:
+      consumes:
+      - application/json
+      description: Save a new customer to the database
+      parameters:
+      - description: Customer Name
+        in: body
+        name: customer
+        required: true
+        schema:
+          $ref: '#/definitions/models.CustomerRequest'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Customer'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      security:
+      - Bearer: []
+      summary: Create a new customer
+      tags:
+      - Customer
+  /customer/{id}:
+    delete:
+      description: Deletes an existing customer from the database
+      parameters:
+      - description: Customer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      security:
+      - Bearer: []
+      summary: Delete Customer
+      tags:
+      - Customer
+    get:
+      consumes:
+      - application/json
+      description: Returns the customer with the given id
+      parameters:
+      - description: Customer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Customer'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      security:
+      - Bearer: []
+      summary: Get customer by id
+      tags:
+      - Customer
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing customer in the database
+      parameters:
+      - description: Customer ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Customer Name
+        in: body
+        name: customer
+        required: true
+        schema:
+          $ref: '#/definitions/models.CustomerRequest'
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      security:
+      - Bearer: []
+      summary: Update customer
+      tags:
+      - Customer
+  /customers:
+    get:
+      description: Retrieve a list of all customers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Customer'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      security:
+      - Bearer: []
+      summary: Get a list of all customers
+      tags:
+      - Customer
+  /destination:
+    get:
+      description: Retrieve a list of all destination
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Destination'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      security:
+      - Bearer: []
+      summary: Get a list of all destination
+      tags:
+      - Destinations
+    post:
+      consumes:
+      - multipart/form-data
+      description: Save a new destination to the database
+      parameters:
+      - description: Destination Name
+        in: formData
+        name: destination_name
+        required: true
+        type: string
+      - description: City ID
+        in: formData
+        name: city_id
+        required: true
+        type: integer
+      - description: Description
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Price
+        in: formData
+        name: price
+        required: true
+        type: integer
+      - description: Image
+        in: formData
+        name: image
+        required: true
+        type: file
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Destination'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      security:
+      - Bearer: []
+      summary: Create a new destination
+      tags:
+      - Destinations
+  /destination/{id}:
+    delete:
+      description: Deletes an existing destination from the database
+      parameters:
+      - description: Destination ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      security:
+      - Bearer: []
+      summary: Delete destination
+      tags:
+      - Destinations
+    get:
+      consumes:
+      - application/json
+      description: Returns the destination with the given id
+      parameters:
+      - description: Destination ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Destination'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      security:
+      - Bearer: []
+      summary: Get destination by id
+      tags:
+      - Destinations
+    put:
+      consumes:
+      - multipart/form-data
+      description: Updates an existing destination in the database
+      parameters:
+      - description: destination ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Destination Name
+        in: formData
+        name: destination_name
+        required: true
+        type: string
+      - description: City ID
+        in: formData
+        name: city_id
+        required: true
+        type: integer
+      - description: Description
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Price
+        in: formData
+        name: price
+        required: true
+        type: integer
+      - description: Image
+        in: formData
+        name: image
+        required: true
+        type: file
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HTTPError'
+      security:
+      - Bearer: []
+      summary: Update destination
+      tags:
+      - Destinations
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: make authentication for the users
+      parameters:
+      - description: Login Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/models.AuthRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Login customer
+      tags:
+      - Auth
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: register a new user
+      parameters:
+      - description: Register Data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.SignUpRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Response'
+      summary: Regster new customer
+      tags:
+      - Auth
+securityDefinitions:
+  Bearer:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
